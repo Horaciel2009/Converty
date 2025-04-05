@@ -13,7 +13,7 @@ Converty is a sleek, user-friendly web application for converting videos between
 - **Multilingual Support**: Available in English and French
 - **Modern Interface**: Dark-themed UI with intuitive controls
 - **Drag-and-Drop Uploads**: Easy file selection
-- **Responsive Design**: Works on desktop and mobile devices
+- **Responsive Design**: Works on desktop like a charm!!
 - **Visual Progress Indication**: Progress bar during conversion
 
 ## 📋 Prerequisites
