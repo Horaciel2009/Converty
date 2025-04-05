@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="{{ 'fr' if session.get('language', 'en') == 'fr' else 'en' }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=width=device-width, initial-scale=1.0">
+    <title>{{ translation['title'] }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container header-content">
+            <div class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M4 8H2v12a2 2 0 0 0 2 2h12v-2H4z"></path>
+                    <path d="M20 2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm-9 12V6l7 4z"></path>
+                </svg>
+                {{ translation['header_title'] }}
+            </div>
+            
+            <!-- Sélecteur de langue -->
+            <div class="language-selector">
+                <span>{{ translation['choose_language'] }}:</span>
+                <a href="{{ url_for('change_language', lang='en') }}" class="lang-btn {% if session.get('language', 'en') == 'en' %}active{% endif %}">EN</a>
+                <a href="{{ url_for('change_language', lang='fr') }}" class="lang-btn {% if session.get('language', 'en') == 'fr' %}active{% endif %}">FR</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div id="alert-container"></div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">{{ translation['card_title'] }}</h2>
+                </div>
+                <div class="card-body">
+                    <form id="convert-form" method="POST" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label class="form-label" for="video-file">{{ translation['file_label'] }}</label>
+                            <div class="file-input-wrapper">
+                                <input type="file" name="video" id="video-file" class="file-input" accept="video/*" required />
+                                <div class="file-input-label">
+                                    <span class="file-input-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                                            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                                            <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+                                        </svg>
+                                    </span>
+                                    <span>{{ translation['file_placeholder'] }}</span>
+                                </div>
+                                <div class="file-name" style="display: none;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="format">{{ translation['format_label'] }}</label>
+                            <div class="select-wrapper">
+                                <select name="format" id="format" class="select" required>
+                                    <option value="mp4">MP4</option>
+                                    <option value="avi">AVI</option>
+                                    <option value="webm">WebM</option>
+                                    <option value="mkv">MKV</option>
+                                    <option value="mov">MOV</option>
+                                    <option value="ogv">OGV</option>
+                                </select>
+                                <div class="select-arrow">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="progress-wrapper">
+                            <div class="progress-bar"></div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M11.596 8.697l-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+                            </svg>
+                            {{ translation['convert_button'] }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2025 {{ translation['footer_text'] }}</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
