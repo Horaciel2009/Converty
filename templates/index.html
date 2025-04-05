@@ -40,9 +40,9 @@
                 <div class="card-body">
                     <form id="convert-form" method="POST" enctype="multipart/form-data">
                         <div class="form-group">
-                            <label class="form-label" for="video-file">{{ translation['file_label'] }}</label>
+                            <label class="form-label" for="media-file">{{ translation['file_label'] }}</label>
                             <div class="file-input-wrapper">
-                                <input type="file" name="video" id="video-file" class="file-input" accept="video/*" required />
+                                <input type="file" name="media" id="media-file" class="file-input" accept="video/*,image/*" required />
                                 <div class="file-input-label">
                                     <span class="file-input-icon">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
@@ -60,12 +60,7 @@
                             <label class="form-label" for="format">{{ translation['format_label'] }}</label>
                             <div class="select-wrapper">
                                 <select name="format" id="format" class="select" required>
-                                    <option value="mp4">MP4</option>
-                                    <option value="avi">AVI</option>
-                                    <option value="webm">WebM</option>
-                                    <option value="mkv">MKV</option>
-                                    <option value="mov">MOV</option>
-                                    <option value="ogv">OGV</option>
+                                    <!-- Options seront chargées dynamiquement en fonction du type de fichier -->
                                 </select>
                                 <div class="select-arrow">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">

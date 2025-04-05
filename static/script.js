@@ -1,20 +1,105 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const fileInput = document.getElementById('video-file');
+  const fileInput = document.getElementById('media-file');
   const fileLabel = document.querySelector('.file-input-label');
   const fileName = document.querySelector('.file-name');
+  const formatSelect = document.getElementById('format');
+  const formatGroup = document.querySelector('.form-group:nth-child(2)'); // Le groupe du menu déroulant
   const form = document.getElementById('convert-form');
   const progressWrapper = document.querySelector('.progress-wrapper');
   const progressBar = document.querySelector('.progress-bar');
   const alertContainer = document.getElementById('alert-container');
   let progressInterval = null;
   
+  // Cacher le groupe du format au chargement initial
+  formatGroup.style.display = 'none';
+  
+  // Formats par défaut pour vidéos et images
+  const videoFormats = ['mp4', 'avi', 'webm', 'mkv', 'mov', 'ogv'];
+  const imageFormats = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'tiff'];
+  
+  // Fonction pour mettre à jour le menu des formats en fonction du type de fichier
+  const updateFormatOptions = (formats) => {
+    // Vider le menu déroulant
+    formatSelect.innerHTML = '';
+    
+    // Ajouter les nouvelles options
+    formats.forEach(format => {
+      const option = document.createElement('option');
+      option.value = format;
+      option.textContent = format.toUpperCase();
+      formatSelect.appendChild(option);
+    });
+    
+    // Afficher le groupe du format
+    formatGroup.style.display = 'block';
+  };
+  
+  // Fonction pour détecter le type de fichier
+  const detectFileType = async (file) => {
+    if (!file) return;
+    
+    // Toujours interroger le serveur pour une détection fiable
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    try {
+      const response = await fetch('/detect_file_type', {
+        method: 'POST',
+        body: formData
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Utiliser le type et formats retournés par le serveur
+        if (data.type === 'image') {
+          console.log('Fichier image détecté, affichage des formats image');
+          updateFormatOptions(data.formats);
+        } else {
+          console.log('Fichier vidéo détecté, affichage des formats vidéo');
+          updateFormatOptions(data.formats);
+        }
+      } else {
+        // En cas d'erreur API, vérification par extension côté client
+        const fileExt = file.name.split('.').pop().toLowerCase();
+        
+        if (imageFormats.includes(fileExt)) {
+          console.log('Extension image détectée (fallback)');
+          updateFormatOptions(imageFormats);
+        } else {
+          console.log('Extension vidéo ou inconnue (fallback)');
+          updateFormatOptions(videoFormats);
+        }
+      }
+    } catch (error) {
+      console.error('Erreur lors de la détection du type de fichier:', error);
+      
+      // En cas d'erreur, vérification par extension côté client
+      const fileExt = file.name.split('.').pop().toLowerCase();
+      
+      if (imageFormats.includes(fileExt)) {
+        console.log('Extension image détectée (après erreur)');
+        updateFormatOptions(imageFormats);
+      } else {
+        console.log('Extension vidéo ou inconnue (après erreur)');
+        updateFormatOptions(videoFormats);
+      }
+    }
+  };
+  
   // Gestion de l'affichage du nom de fichier
   fileInput.addEventListener('change', () => {
     if (fileInput.files.length) {
-      fileName.textContent = fileInput.files[0].name;
+      const file = fileInput.files[0];
+      fileName.textContent = file.name;
       fileName.style.display = 'block';
+      
+      // Détecter le type de fichier et mettre à jour les formats
+      detectFileType(file);
     } else {
       fileName.style.display = 'none';
+      // Cacher le menu déroulant si aucun fichier n'est sélectionné
+      formatGroup.style.display = 'none';
     }
   });
   
@@ -56,8 +141,15 @@ document.addEventListener('DOMContentLoaded', () => {
     fileInput.files = files;
     
     if (fileInput.files.length) {
-      fileName.textContent = fileInput.files[0].name;
+      const file = fileInput.files[0];
+      fileName.textContent = file.name;
       fileName.style.display = 'block';
+      
+      // Détecter le type de fichier et mettre à jour les formats
+      detectFileType(file);
+    } else {
+      // Cacher le menu déroulant si aucun fichier n'est sélectionné
+      formatGroup.style.display = 'none';
     }
   }
   
@@ -66,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     
     if (!fileInput.files.length) {
-      showAlert('Veuillez sélectionner un fichier vidéo', 'error');
+      showAlert('Veuillez sélectionner un fichier média', 'error');
       return;
     }
     

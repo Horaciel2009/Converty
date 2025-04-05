@@ -6,3 +6,4 @@ itsdangerous>=2.0.0
 click>=8.0.0
 blinker>=1.6.0
 python-dotenv>=1.0.0
+pillow>=10.0.0
